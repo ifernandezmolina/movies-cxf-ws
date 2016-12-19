@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<movies>
+    <movie>
+        <id>1</id>
+        <title>movie 1</title>
+        <director>director 1</director>
+        <year>2016</year>
+        <synopsis>xxxx</synopsis>
+    </movie>
+    <movie>
+        <id>2</id>
+        <title>movie 2</title>
+        <director>director 2</director>
+        <year>2016</year>
+        <synopsis>xxxx</synopsis>
+    </movie>
+</movies>

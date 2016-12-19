@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://cxf.apache.org/jaxrs
+		http://cxf.apache.org/schemas/jaxrs.xsd
+		http://cxf.apache.org/jaxws
+		http://cxf.apache.org/schemas/jaxws.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/jdbc
+		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+	<!-- Scan for spring annotated components -->
+    <context:component-scan base-package="com.adictos.spring.cxf.movies"/>
+
+    <!-- Process annotations on registered beans like @Autowired... -->
+    <context:annotation-config/>
+	
+	<!-- para activar los respositorios sin anotaciones -->
+	<!-- <jpa:repositories base-package="com.adictos.spring.cxf.movies.repositories"></jpa:repositories> -->
+
+	<jaxws:endpoint id="moviesServiceSOAPWS"
+					implementor="#moviesServiceSOAP"
+					address="/ws">
+	</jaxws:endpoint>
+
+	<jaxrs:server id="moviesServiceRESTRS" address="/rest">
+		<jaxrs:serviceBeans>
+			<ref bean="moviesServiceREST" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+		</jaxrs:providers>
+	</jaxrs:server>
+	
+	<!-- database configuration -->
+	<jdbc:embedded-database id="dataSource" type="H2">
+		<jdbc:script location="classpath:ddl.sql" />
+		<jdbc:script location="classpath:dml.sql" />
+	</jdbc:embedded-database>
+ 
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.adictos.spring.cxf.movies.model" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="database" value="H2" />
+				<!-- <property name="generateDdl" value="true" /> -->
+			</bean>
+		</property>
+	</bean>
+
+</beans>

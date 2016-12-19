@@ -1,0 +1,1 @@
+SOAP and REST services developed with Apache CXF, Spring and JPA support
